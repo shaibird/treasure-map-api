@@ -5,4 +5,4 @@ class UserDetails(models.Model):
     username = models.CharField(max_length=25)
     location = models.CharField(max_length=30)
     birthday = models.DateField()
-    photo_url = models.CharField(max_length=200)
+    photo_url = models.URLField(max_length=800)
