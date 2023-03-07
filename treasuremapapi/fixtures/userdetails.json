@@ -1,0 +1,12 @@
+[
+    {
+        "model": "treasuremapapi.userdetail",
+        "pk": "1",
+        "fields": {
+            "user": 1,
+            "bio": "Loves bushwhacking and beer",
+            "birthday": "1993-07-21",
+            "photo_url" : ""
+        }
+    }
+]
