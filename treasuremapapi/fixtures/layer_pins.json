@@ -1,0 +1,25 @@
+[    
+    {        
+        "model": "treasuremapapi.layerpin",
+        "pk": 1,        
+        "fields": {
+            "layer": 1,            
+            "location": 1        
+            }    
+    },    
+    {        
+        "model": "treasuremapapi.layerpin",        
+        "pk": 2,
+        "fields": {            
+            "layer": 1,            
+            "location": 3        
+            }    
+    },    
+    {        
+        "model": "treasuremapapi.layerpin",        
+        "fields": {            
+            "layer": 1,            
+            "location": 7        
+            }    
+    }
+]
