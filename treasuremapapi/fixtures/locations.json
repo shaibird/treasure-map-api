@@ -1,0 +1,87 @@
+[
+    {
+      "model": "treasuremapapi.location",
+      "pk": 1,
+      "fields": {
+        "name": "Camping near AT",
+        "latitude": 35.1451755, 
+        "longitude": -83.5226681,
+        "user": 1,
+        "private": true,
+        "date": "2022-03-15T12:00:00Z"
+      }
+    },
+    {
+      "model": "treasuremapapi.location",
+      "pk": 2,
+      "fields": {
+        "name": "Old Heritage Apple Tree",
+        "latitude": 35.222685,
+        "longitude": -83.5628801,
+        "user": 1,
+        "private": true,
+        "date": "2022-03-16T12:00:00Z"
+      }
+    },
+    {
+      "model": "treasuremapapi.location",
+      "pk": 3,
+      "fields": {
+        "name": "Forest Camping",
+        "latitude": 35.3393260,
+        "longitude": -83.3520021,
+        "user": 1,
+        "private": false,
+        "date": "2022-03-17T12:00:00Z"
+      }
+    },
+    {
+      "model": "treasuremapapi.location",
+      "pk": 4,
+      "fields": {
+        "name": "Granite City",
+        "latitude": 35.044743,
+        "longitude": -83.137339,
+        "user": 1,
+        "private": false,
+        "date": "2022-03-18T12:00:00Z"
+      }
+    },
+    {
+        "model": "treasuremapapi.location",
+        "pk": 5,
+        "fields": {
+          "name": "Creek Boulder",
+          "latitude": 35.255782,
+          "longitude": -85.284354,
+          "user": 1,
+          "private": true,
+          "date": "2022-03-18T12:00:00Z"
+        }
+      },
+      {
+        "model": "treasuremapapi.location",
+        "pk": 6,
+        "fields": {
+          "name": "Home Hill Repeats",
+          "latitude": 35.3363057,
+          "longitude": -85.3295325,
+          "user": 1,
+          "private": false,
+          "date": "2022-03-18T12:00:00Z"
+        }
+      },
+      {
+        "model": "treasuremapapi.location",
+        "pk": 7,
+        "fields": {
+          "name": "Camping near GSMNP",
+          "latitude": 35.2717697,
+          "longitude": -83.9272243,
+          "user": 1,
+          "private": true,
+          "date": "2022-03-18T12:00:00Z"
+        }
+      }
+  ]
+  

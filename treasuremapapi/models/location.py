@@ -7,4 +7,4 @@ class Location(models.Model):
     longitude = models.FloatField()
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user_pins')
     private = models.BooleanField(default=True)
-    date = models. DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
