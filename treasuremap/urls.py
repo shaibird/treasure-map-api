@@ -18,12 +18,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from treasuremapapi.views import ImageView
+from treasuremapapi.views import ImageView, LocationView, login_user, register_user
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'images', ImageView)
+router.register(r'locations', LocationView, 'location')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login', login_user),
+    path('register', register_user),
     path('', include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
