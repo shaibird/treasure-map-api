@@ -1,6 +1,8 @@
 from django.http import HttpResponseServerError
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -49,7 +51,17 @@ class LocationNoteView(ViewSet):
 
         serialized = LocationNotesSerializer(location_notes, many=False)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
+    
+    def destroy(self, request, pk=None):
+        """Handle PUT requests for service tickets
 
+        Returns:
+            Response: None with 204 status code
+        """
+        location_notes = LocationNote.objects.get(pk=pk)
+        location_notes.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        
 class LocationNotesSerializer(serializers.ModelSerializer):
     location = LocationSerializer
 
