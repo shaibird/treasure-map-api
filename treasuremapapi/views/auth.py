@@ -27,12 +27,14 @@ def login_user(request):
         token = Token.objects.get(user=authenticated_user)
         data = {
             'valid': True,
+            'id': authenticated_user.id,
+            'first_name':authenticated_user.first_name,
             'token': token.key
         }
         return Response(data)
     else:
         # Bad login details were provided. So we can't log the user in.
-        data = { 'valid': False }
+        data = { 'valid': False, 'token': None }
         return Response(data)
 
 @api_view(['POST'])
@@ -49,6 +51,7 @@ def register_user(request):
     new_user = User.objects.create_user(
         username=request.data['username'],
         password=request.data['password'],
+        email=request.data['email'],
         first_name=request.data['first_name'],
         last_name=request.data['last_name']
     )
@@ -56,7 +59,7 @@ def register_user(request):
     # Now save the extra info in the treasuremap.api_userdetail table
     mapper = UserDetail.objects.create(
         username = request.data['username'],
-        location = request.data['location'],
+        bio = request.data['bio'],
         birthday = request.data['birthday'],
         photo_url = request.data['photo_url'],
         user=new_user
@@ -65,5 +68,13 @@ def register_user(request):
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=mapper.user)
     # Return the token to the client
-    data = { 'token': token.key }
+    data = {
+            'valid': True,
+            'first_name': new_user.first_name,
+            'id': mapper['id'],
+            'bio': mapper.bio,
+            'photo_url': mapper.photo_url,
+            'username' : mapper.username,
+            'token': token.key
+            }
     return Response(data)
