@@ -59,6 +59,17 @@ class LocationView(ViewSet):
         location.private = request.data['private']
         location.date = request.data['date']
         location.user = request.auth.user
+    
+    def destroy(self, request, pk=None):
+        """Handle PUT requests for service tickets
+
+        Returns:
+            Response: None with 204 status code
+        """
+        location = Location.objects.get(pk=pk)
+        location.delete()
+        
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
