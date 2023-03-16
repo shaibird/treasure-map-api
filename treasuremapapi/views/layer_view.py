@@ -29,6 +29,17 @@ class LayerView(ViewSet):
             Response -- JSON serialized list of locations
         """
 
+        layer_name = request.query_params.get('layername')
+        if layer_name is not None:
+            try:
+                layer = LayerName.objects.get(name=layer_name)
+            except LayerName.DoesNotExist:
+                return Response({'error': 'Layer not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            pins = LayerPin.objects.filter(layer=layer)
+            serializer = LayerPinSerializer(pins, many=True)
+            return Response(serializer.data)
+        
         layer_names = LayerName.objects.all()
         serializer = LayerNameSerializer(layer_names, many=True)
         return Response(serializer.data)
@@ -65,9 +76,9 @@ class LayerView(ViewSet):
         layer_names.delete()
         
         return Response(None, status=status.HTTP_204_NO_CONTENT)
-        
+
 class LayerNameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LayerName
-        fields = ('name', 'user')
+        fields = ('id', 'name', 'user')
