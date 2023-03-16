@@ -51,6 +51,20 @@ class LocationNoteView(ViewSet):
 
         serialized = LocationNotesSerializer(location_notes, many=False)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, pk=None):
+        """Handle Put request for Notes
+            Returns nothing"""
+
+        location_notes = LocationNote.objects.get(pk=pk)
+        location_notes.location = Location.objects.get(pk=request.data['location'])
+        location_notes.user = request.auth.user
+        location_notes.date = request.data['date']
+        location_notes.note = request.data['note']
+        location_notes.private = request.data['private']
+        location_notes.save()
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
     
     def destroy(self, request, pk=None):
         """Handle PUT requests for service tickets
