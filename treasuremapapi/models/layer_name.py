@@ -5,3 +5,10 @@ class LayerName(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_layer")
     locations = models.ManyToManyField("Location", related_name="layers")
+
+    @property
+    def pins(self):
+        pins = []
+        for location in self.locations.all():
+            pins.extend(location.pins.all())
+        return pins

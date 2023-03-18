@@ -31,6 +31,8 @@ class LayerPinView(ViewSet):
 
 
     def create(self, request):
+        print(request.data)
+
         layer_pin = LayerPin()
         layer_pin.layer = LayerName.objects.get(pk=request.data['layer'])
         layer_pin.location = Location.objects.get(pk=request.data['location'])
