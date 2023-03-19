@@ -27,8 +27,6 @@ SECRET_KEY = os.environ.get('MY_SECRET_KEY')
 
 # Actual directory user files go to
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# URL used to access the media
 MEDIA_URL = '/media/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -50,16 +48,23 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'treasuremapapi',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-    'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser'
+    ]
 }
+
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
