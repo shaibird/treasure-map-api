@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from treasuremapapi.models import UserDetail    
+from treasuremapapi.models import UserDetail   
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -58,10 +58,7 @@ def register_user(request):
 
     # Now save the extra info in the treasuremap.api_userdetail table
     mapper = UserDetail.objects.create(
-        username = request.data['username'],
         bio = request.data['bio'],
-        birthday = request.data['birthday'],
-        photo_url = request.data['photo_url'],
         user=new_user
     )
 
@@ -71,10 +68,8 @@ def register_user(request):
     data = {
             'valid': True,
             'first_name': new_user.first_name,
-            'id': mapper['id'],
             'bio': mapper.bio,
-            'photo_url': mapper.photo_url,
-            'username' : mapper.username,
             'token': token.key
             }
+            
     return Response(data)
