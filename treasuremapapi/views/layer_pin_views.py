@@ -15,19 +15,25 @@ class LayerPinView(ViewSet):
     def list(self, request):
         """Handle GET requests to get all LayerPin instances associated with a specific LayerName"""
         layer_name = request.query_params.get('layername', None)
+        user = request.auth.user
+        location_id = request.query_params.get('location', None)
+
+        layer_pins = LayerPin.objects.filter(layer__user=user)
+
         if layer_name is not None:
             try:
-                layer = LayerName.objects.get(name=layer_name)
+                layer = LayerName.objects.get(layer=layer_name, user=user)
             except LayerName.DoesNotExist:
                 return Response(f"No layer with name {layer_name} exists.", status=status.HTTP_404_NOT_FOUND)
 
-            layer_pins = LayerPin.objects.filter(layer=layer)
-            serializer = LayerPinSerializer(layer_pins, many=True)
-            return Response(serializer.data)
-        else:
-            layer_pins = LayerPin.objects.all()
-            serializer = LayerPinSerializer(layer_pins, many=True)
-            return Response(serializer.data)
+            layer_pins = layer_pins.filter(layer=layer)
+
+        if location_id is not None:
+            layer_pins = layer_pins.filter(location=location_id)
+
+        serializer = LayerPinSerializer(layer_pins, many=True)
+        return Response(serializer.data)
+
 
 
     def create(self, request):
@@ -68,4 +74,5 @@ class LayerPinSerializer(serializers.ModelSerializer):
     class Meta:
         model = LayerPin
         fields = ('id', 'layer', 'location')
+        depth = 1
         
