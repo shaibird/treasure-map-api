@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from treasuremapapi.models import Location
+from treasuremapapi.models import Location, Image
 
 class LocationView(ViewSet):
     """Locations View"""
@@ -20,7 +20,7 @@ class LocationView(ViewSet):
         return Response(serializer.data)
 
     def list(self, request):
-        """Handle GET requests to get all blogs
+        """Handle GET requests to get all locations
         
         Returns:
             Response -- JSON serialized list of locations
@@ -70,8 +70,20 @@ class LocationView(ViewSet):
         location.delete()
         
         return Response(None, status=status.HTTP_204_NO_CONTENT)
-
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ('id', 'image', 'location', 'user', 'private', 'date')
 class LocationSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
+    def get_images(self, obj):
+        images = Image.objects.filter(location=obj)
+        serializer = ImageSerializer(images, many=True, context=self.context)
+        return serializer.data
     class Meta:
         model = Location
-        fields = ('id', 'name', 'latitude', 'longitude', 'private', 'date', 'user')
+        fields = ('id', 'name', 'latitude', 'longitude', 'private', 'date', 'user', 'images')
+    
+
+    

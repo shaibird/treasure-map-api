@@ -2,10 +2,13 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework import serializers, status
-from treasuremapapi.models import Image, Location
+from treasuremapapi.models import Image, Location, UserDetail
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets
 from django.core.files.uploadedfile import InMemoryUploadedFile
+import uuid
+import base64
+from django.core.files.base import ContentFile
 
 class ImageSerializer(serializers.ModelSerializer):
     """JSON serializer for Images"""
@@ -16,10 +19,6 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class ImageView(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    parser_classes = (MultiPartParser, FormParser)
-
 
     def retrieve(self, request, pk):
         """Handle GET requests for single image
@@ -41,36 +40,37 @@ class ImageView(viewsets.ModelViewSet):
         Returns:
             Response -- JSON serialized list of images
         """
+        location_id = request.query_params.get('location', None)
 
-        images = Image.objects.all()
+        if location_id is not None:
+            try:
+                images = Image.objects.filter(location=location_id)
+            except Image.DoesNotExist:
+                return Response({'error': 'Location ID does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            images = Image.objects.all()
         serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
 
     def create(self, request):
-        """Handle POST operations
-        Returns
-            Response -- JSON serialized photo instance"""
+        """
+        POST requests to /images
+        Returns the created instance of image and a 201 status code
+        """
+        
+        image = Image()
+        image.user = request.auth.user
+        image.location = Location.objects.get(pk=request.data['location'])
+        image.private = request.data.get('private', False)
+        image.date = request.data.get('date')
 
-        # Check if an image file was included in the request
-        if 'image' not in request.data:
-            return Response({'error': 'Image file is missing from request'}, status=status.HTTP_400_BAD_REQUEST)
+        format, imgstr = request.data["image"].split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{image.id}-{uuid.uuid4()}.{ext}')
+        image.image = data
+        image.save()
 
-        # Retrieve the image file data from the request
-        image_file = request.data['image']
-
-        # Wrap the image file data in an InMemoryUploadedFile object
-        image_data = InMemoryUploadedFile(image_file, None, image_file.name, 'image/jpeg', image_file.size, None)
-
-        # Replace the 'image' value in the request data with the InMemoryUploadedFile object
-        request.data['image'] = image_data
-
-        # Create a new ImageSerializer with the updated request data
-        Image_serializer = ImageSerializer(data=request.data)
-
-        if Image_serializer.is_valid():
-            Image_serializer.save()
-            return Response(Image_serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            print('error', Image_serializer.errors)
-            return Response(Image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serialized = ImageSerializer(
+            image, many=False, context={'request': request})
+        return Response(serialized.data, status=status.HTTP_201_CREATED)
 

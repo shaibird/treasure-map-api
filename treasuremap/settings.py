@@ -26,8 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('MY_SECRET_KEY')
 
 # Actual directory user files go to
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+MEDIA_ROOT = 'media'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -48,7 +49,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'treasuremapapi',
-    'django_cleanup.apps.CleanupConfig',
 ]
 
 REST_FRAMEWORK = {

@@ -21,7 +21,7 @@ from rest_framework import routers
 from treasuremapapi.views import ImageView, LocationView, login_user, register_user, LocationNoteView, LayerView, LayerPinSerializer, LayerPinView
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'images', ImageView)
+router.register(r'images', ImageView, 'images')
 router.register(r'locations', LocationView, 'location')
 router.register(r'locationnotes', LocationNoteView, 'locationnotes')
 router.register(r'layers', LayerView, 'layers')
