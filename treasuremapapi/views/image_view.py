@@ -3,19 +3,27 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from treasuremapapi.models import Image, Location, UserDetail
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets
-from django.core.files.uploadedfile import InMemoryUploadedFile
 import uuid
 import base64
 from django.core.files.base import ContentFile
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ('id', 'latitude', 'longitude', 'user', 'private', 'date')
 class ImageSerializer(serializers.ModelSerializer):
-    """JSON serializer for Images"""
+    """JSON serializer for Images"""    location = LocationSerializer(many=False)
+    # image_url = serializers.SerializerMethodField()
+
+    # def get_image_url(self, obj):
+    #     if obj.image:
+    #         return obj.image.url
 
     class Meta:
         model = Image
         fields = ('id', 'image', 'user', 'location', 'private')
+
 
 
 class ImageView(viewsets.ModelViewSet):
@@ -66,11 +74,11 @@ class ImageView(viewsets.ModelViewSet):
 
         format, imgstr = request.data["image"].split(';base64,')
         ext = format.split('/')[-1]
-        data = ContentFile(base64.b64decode(imgstr), name=f'{image.id}-{uuid.uuid4()}.{ext}')
+        data = ContentFile(base64.b64decode(
+                imgstr), name=f'image-{uuid.uuid4()}.{ext}')
         image.image = data
         image.save()
 
         serialized = ImageSerializer(
             image, many=False, context={'request': request})
         return Response(serialized.data, status=status.HTTP_201_CREATED)
-

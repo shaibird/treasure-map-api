@@ -10,3 +10,5 @@ class Image(models.Model):
     location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="location_images")
     private = models.BooleanField(default=True)
     date = models.DateField(auto_now_add=True)
+
+
