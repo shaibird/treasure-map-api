@@ -13,7 +13,8 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = ('id', 'latitude', 'longitude', 'user', 'private', 'date')
 class ImageSerializer(serializers.ModelSerializer):
-    """JSON serializer for Images"""    location = LocationSerializer(many=False)
+    """JSON serializer for Images"""    
+    location = LocationSerializer(many=False)
     # image_url = serializers.SerializerMethodField()
 
     # def get_image_url(self, obj):
